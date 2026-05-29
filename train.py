@@ -25,9 +25,7 @@ from config import (
 )
 from utils import build_dataset, load_ood_data
 
-# ═══════════════════════════════════════════════════════════════════
-#  Weighted Trainer  (Cell 12)
-# ═══════════════════════════════════════════════════════════════════
+#  Weighted Trainer 
 
 CLASS_WEIGHTS = torch.tensor(CLASS_WEIGHTS_LIST).to(DEVICE)
 
@@ -54,18 +52,16 @@ def compute_metrics(eval_pred):
     return {"precision": p, "recall": r, "f1": f1}
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  Main training loop
-# ═══════════════════════════════════════════════════════════════════
 
 def train():
-    # ── data ──
+    # data 
     train_list, test_list, hnm_cand_atk, hnm_cand_nrm, all_attacks, all_normals = (
         build_dataset()
     )
     ood_data, ood_labels = load_ood_data()
 
-    # ── tokenizer ──
+    #  tokenizer 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -88,7 +84,7 @@ def train():
 
     print(f"train: {len(train_tok)}, test: {len(test_tok)}, ood: {len(ood_tok)}")
 
-    # ── model ──
+    # model 
     model = AutoModelForSequenceClassification.from_pretrained(
         MODEL_NAME, num_labels=2
     )
@@ -98,7 +94,7 @@ def train():
     print(f"trainable params: {n_params:,} (full fine-tuning)")
     print(f"loss: CE (weight {CLASS_WEIGHTS_LIST}, LS {LABEL_SMOOTHING})")
 
-    # ── Round 1 ──
+    # Round 1 
     print("\n=== Round 1: standard training ===")
     trainer = WeightedTrainer(
         model=model,
@@ -126,7 +122,7 @@ def train():
     trainer.train()
     print("Round 1 complete.")
 
-    # ── Round 2: Hard Negative Mining ──
+    # Round 2: Hard Negative Mining 
     print("\n=== Round 2: Hard Negative Mining ===")
 
     if len(hnm_cand_atk) > 0 and len(hnm_cand_nrm) > 0:
@@ -198,7 +194,7 @@ def train():
         print("  (no HNM candidates available, skipping Round 2)")
         print("\n=== Training complete (Round 1 only) ===")
 
-    # ── Save model ──
+    # Save model 
     save_dir = "./spid-deberta-base"
     model.save_pretrained(save_dir)
     tokenizer.save_pretrained(save_dir)
