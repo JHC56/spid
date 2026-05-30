@@ -15,9 +15,7 @@ from config import DEVICE, MAX_LEN, TARGET_PRECISION, MIN_RECALL
 from utils import split_sentence
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  Temperature calibration
-# ═══════════════════════════════════════════════════════════════════
 
 def calibrate_temperature(trainer, test_tok, test_list):
     """Find optimal temperature on held-out test set."""
@@ -44,9 +42,7 @@ def calibrate_temperature(trainer, test_tok, test_list):
     return best_t, test_probs_calibrated
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  In-distribution threshold sweep
-# ═══════════════════════════════════════════════════════════════════
 
 def indist_sweep(test_probs_calibrated, test_list):
     """Threshold sweep on in-distribution test set."""
@@ -62,9 +58,7 @@ def indist_sweep(test_probs_calibrated, test_list):
         print(f"{thr:>6.2f} {pr:>8.4f} {rc:>8.4f} {f1:>8.4f}")
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  OOD evaluation (SPID only)
-# ═══════════════════════════════════════════════════════════════════
 
 def evaluate_ood(trainer, ood_tok, ood_data, ood_labels, temperature):
     """OOD sweep for SPID alone."""
@@ -104,7 +98,7 @@ def evaluate_ood(trainer, ood_tok, ood_data, ood_labels, temperature):
                 threshold = thr
         print(f"\nfallback (best F1): threshold={threshold}")
 
-    # ── Final report ──
+    # Final report 
     print("\n" + "=" * 60)
     print(f"OOD FINAL — SPID (threshold={threshold}, T={temperature:.1f})")
     print("=" * 60)
@@ -115,7 +109,7 @@ def evaluate_ood(trainer, ood_tok, ood_data, ood_labels, temperature):
     ))
     print(f"block rate: {spid_preds_final.mean():.4f}")
 
-    # ── Update saved config ──
+    # Update saved config 
     cfg_path = os.path.join("./spid-deberta-base", "spid_config.json")
     os.makedirs("./spid-deberta-base", exist_ok=True)
     with open(cfg_path, "w") as f:
