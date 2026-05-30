@@ -3,9 +3,7 @@
 from pipeline import SPIDPipeline
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  Pipeline demo  (Cell 21)
-# ═══════════════════════════════════════════════════════════════════
 
 def run_demo(pipe: SPIDPipeline):
     print("=" * 70)
@@ -53,9 +51,7 @@ def run_demo(pipe: SPIDPipeline):
         print()
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  Splitting comparison  (Cell 22)
-# ═══════════════════════════════════════════════════════════════════
 
 def splitting_comparison(pipe: SPIDPipeline):
     from utils import split_sentence
@@ -98,9 +94,7 @@ def splitting_comparison(pipe: SPIDPipeline):
             print()
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  Interactive mode  (Cell 25)
-# ═══════════════════════════════════════════════════════════════════
 
 def interactive(pipe: SPIDPipeline):
     print("\n=== SPID Interactive Mode ===")
